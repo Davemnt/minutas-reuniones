@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minuta de Reunión</title>
+    <style>
+        :root {
+            --page-width: 210mm;
+            --page-height: 297mm;
+            --main-padding: 80px;
+        }
+
+        :root[data-format="carta"] {
+            --page-width: 216mm;
+            --page-height: 279mm;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .no-print {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            flex-wrap: wrap;
+        }
+
+        .no-print label {
+            font-weight: bold;
+        }
+
+        .no-print select, .no-print button, .no-print input {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        .no-print button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        .no-print button:hover {
+            background-color: #0056b3;
+        }
+
+        .page {
+            position: relative;
+            width: var(--page-width);
+            height: var(--page-height);
+            padding: var(--main-padding);
+            background-image: url('images/fondo.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(var(--page-height) - (2 * var(--main-padding)));
+            overflow: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            color: #005a9c;
+            border-bottom: 2px solid #005a9c;
+            padding-bottom: 8px;
+            margin-top: 70px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .field {
+            margin-bottom: 8px;
+        }
+
+        .field strong {
+            display: block;
+            font-size: 0.85rem;
+            color: #333;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+
+        .editable {
+            border: 1px dashed #ccc;
+            padding: 6px;
+            min-height: 18px;
+            line-height: 1.3;
+            background-color: rgba(255, 255, 255, 0.85);
+            font-size: 0.82rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .editable-input {
+            border: 1px dashed #ccc;
+            padding: 5px;
+            width: calc(100% - 12px);
+            font-size: 0.82rem;
+            font-family: inherit;
+            box-sizing: border-box;
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+
+        .editable:focus, .editable-input:focus {
+            outline: 2px solid #007bff;
+            border-style: solid;
+            background-color: #fff;
+        }
+
+        .large-area {
+            min-height: 130px;
+            max-height: 90px;
+            overflow-y: auto;
+        }
+
+        @media print {
+            body {
+                background-color: transparent;
+                padding: 0;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            .page {
+                width: 100%;
+                height: 100vh;
+                margin: 0;
+                padding: var(--main-padding);
+                box-shadow: none;
+                border: none;
+                background-image: url('images/fondo.png') !important;
+                background-size: cover !important;
+                background-position: center !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .editable, .editable-input {
+                border: none;
+                padding: 0;
+                background-color: transparent;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            @page {
+                size: A4;
+                margin: 0;
+            }
+
+            :root[data-format="carta"] ~ body .page {
+                width: 216mm;
+                height: 279mm;
+            }
+        }
+
+        @media print and (orientation: portrait) {
+            @page {
+                size: letter;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print">
+        <label for="meetingType">Tipo de Reunión:</label>
+        <select id="meetingType">
+            <option value="Reunión de Sumo Consejo">Reunión de Sumo Consejo</option>
+            <option value="Reunión de Consejo de Obispos">Reunión de Consejo de Obispos</option>
+        </select>
+        <label for="pageFormat">Formato:</label>
+        <select id="pageFormat">
+            <option value="a4">A4</option>
+            <option value="carta">Carta</option>
+        </select>
+        <button onclick="window.print()">Imprimir Agenda</button>
+    </div>
+
+    <div class="page">
+        <div class="content-wrapper">
+            <h1 id="meetingTitle">Reunión de Sumo Consejo</h1>
+
+            <div class="field">
+                <strong>Fecha:</strong>
+                <input type="date" id="fecha" class="editable-input">
+            </div>
+
+            <div class="field">
+                <strong>Dirige:</strong>
+                <div class="editable" contenteditable="true" id="dirige"></div>
+            </div>
+
+            <div class="field">
+                <strong>Preside:</strong>
+                <div class="editable" contenteditable="true" id="preside"></div>
+            </div>
+
+            <div class="field">
+                <strong>Oración:</strong>
+                <div class="editable" contenteditable="true" id="oracion"></div>
+            </div>
+
+            <div class="field">
+                <strong>Pensamiento espiritual:</strong>
+                <div class="editable" contenteditable="true" id="pensamiento"></div>
+            </div>
+
+            <div class="field">
+                <strong>Anuncios:</strong>
+                <div class="editable large-area" contenteditable="true" id="anuncios"></div>
+            </div>
+
+            <div class="field">
+                <strong>Instrucción / Capacitación / Consejo:</strong>
+                <div class="editable large-area" contenteditable="true" id="instruccion"></div>
+            </div>
+
+            <div class="field">
+                <strong>Oración Final:</strong>
+                <div class="editable" contenteditable="true" id="oracion_final"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Functions to update UI ---
+        function updateTitle() {
+            const select = document.getElementById('meetingType');
+            const title = document.getElementById('meetingTitle');
+            title.textContent = select.value;
+        }
+
+        function updatePageFormat() {
+            const format = document.getElementById('pageFormat').value;
+            if (format === 'carta') {
+                document.documentElement.setAttribute('data-format', 'carta');
+            } else {
+                document.documentElement.removeAttribute('data-format');
+            }
+        }
+
+        // --- Functions for saving and loading data ---
+        const fieldsToSave = document.querySelectorAll('.editable, .editable-input, #meetingType, #pageFormat');
+
+        function saveAllContent() {
+            fieldsToSave.forEach(field => {
+                const key = field.id;
+                const value = (field.tagName === 'INPUT' || field.tagName === 'SELECT') ? field.value : field.innerHTML;
+                localStorage.setItem(key, value);
+            });
+        }
+
+        function loadAllContent() {
+            // Load meeting type first to set title correctly
+            const savedType = localStorage.getItem('meetingType');
+            if (savedType) {
+                document.getElementById('meetingType').value = savedType;
+            }
+            updateTitle(); // Update title based on loaded type
+
+            // Load page format
+            const savedFormat = localStorage.getItem('pageFormat');
+            if (savedFormat) {
+                document.getElementById('pageFormat').value = savedFormat;
+            }
+            updatePageFormat(); // Update format based on loaded value
+
+            // Load all other fields
+            fieldsToSave.forEach(field => {
+                // Skip meetingType and pageFormat as they're already loaded
+                if (field.id === 'meetingType' || field.id === 'pageFormat') return;
+
+                const savedContent = localStorage.getItem(field.id);
+                if (savedContent) {
+                    if (field.tagName === 'INPUT' || field.tagName === 'SELECT') {
+                        field.value = savedContent;
+                    } else {
+                        field.innerHTML = savedContent;
+                    }
+                }
+            });
+        }
+
+        // --- Event Listeners ---
+        document.getElementById('meetingType').addEventListener('change', () => {
+            updateTitle();
+            saveAllContent();
+        });
+
+        document.getElementById('pageFormat').addEventListener('change', () => {
+            updatePageFormat();
+            saveAllContent();
+        });
+
+        fieldsToSave.forEach(field => {
+            if (field.id !== 'meetingType' && field.id !== 'pageFormat') {
+                field.addEventListener('input', saveAllContent);
+            }
+        });
+
+        window.onload = loadAllContent;
+    </script>
+
+</body>
+</html>
