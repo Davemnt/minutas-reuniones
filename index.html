@@ -8,12 +8,7 @@
         :root {
             --page-width: 210mm;
             --page-height: 297mm;
-            --main-padding: 135px 50px;
-        }
-
-        :root[data-format="carta"] {
-            --page-width: 216mm;
-            --page-height: 279mm;
+            --main-padding: 70px 50px 180px 50px; /* top right bottom left */
         }
 
         body {
@@ -71,7 +66,7 @@
             height: var(--page-height);
             padding: var(--main-padding);
             background-image: url('images/fondo.png');
-            background-size: cover;
+            background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
             background-color: #ffffff;
@@ -93,7 +88,7 @@
             color: #005a9c;
             border-bottom: 2px solid #005a9c;
             padding-bottom: 8px;
-            margin-top: 45px;
+            margin-top: 55px;
             margin-bottom: 18px;
             font-size: 2.25rem;
         }
@@ -152,15 +147,17 @@
         }
 
         .large-area {
-            min-height: 125px;
-            max-height: 145px;
-            overflow-y: auto;
+            min-height: 32px;
+            max-height: none;
+            height: auto;
+            overflow-y: visible;
         }
 
         @media print {
             body {
                 background-color: transparent;
                 padding: 0;
+                margin: 0 !important;
             }
 
             .no-print {
@@ -168,15 +165,16 @@
             }
 
             .page {
-                width: 100%;
-                height: 100vh;
-                margin: 0;
-                padding: var(--main-padding);
-                box-shadow: none;
-                border: none;
+                width: 100vw !important;
+                height: 100vh !important;
+                margin: 0 !important;
+                padding: 70px 50px 180px 50px !important;
+                box-shadow: none !important;
+                border: none !important;
                 background-image: url('images/fondo.png') !important;
-                background-size: cover !important;
+                background-size: 100% 100% !important;
                 background-position: center !important;
+                background-repeat: no-repeat !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
@@ -190,26 +188,9 @@
             }
 
             @page {
-                size: letter;
+                size: A4;
                 margin: 0;
             }
-        }
-
-        @media print {
-            :root[data-format="a4"] .page {
-                width: 210mm;
-                height: 297mm;
-            }
-        }
-
-        @page {
-            size: letter;
-            margin: 0;
-        }
-
-        :root[data-format="a4"] {
-            --page-width: 210mm;
-            --page-height: 297mm;
         }
         
     </style>
@@ -222,11 +203,6 @@
             <option value="Reunión de Sumo Consejo">Reunión de Sumo Consejo</option>
             <option value="Reunión de Consejo de Obispos">Reunión de Consejo de Obispos</option>
             <option value="Reunión de Consejo de Estaca">Reunión de Consejo de Estaca</option>
-        </select>
-        <label for="pageFormat">Formato:</label>
-        <select id="pageFormat">
-            <option value="carta" selected>Carta</option>
-            <option value="a4">A4</option>
         </select>
         <button onclick="window.print()">Imprimir Agenda</button>
     </div>
@@ -286,17 +262,11 @@
             title.textContent = select.value;
         }
 
-        function updatePageFormat() {
-            const format = document.getElementById('pageFormat').value;
-            if (format === 'carta') {
-                document.documentElement.setAttribute('data-format', 'carta');
-            } else {
-                document.documentElement.setAttribute('data-format', 'a4');
-            }
-        }
+        // Eliminar función de formato de página, ya que solo se usará A4
 
         // --- Functions for saving and loading data ---
-        const fieldsToSave = document.querySelectorAll('.editable, .editable-input, #meetingType, #pageFormat');
+        // Solo una declaración de fieldsToSave, sin #pageFormat
+        const fieldsToSave = document.querySelectorAll('.editable, .editable-input, #meetingType');
 
         function saveAllContent() {
             fieldsToSave.forEach(function(field) {
@@ -314,19 +284,9 @@
             }
             updateTitle();
 
-            // Load page format
-            const savedFormat = localStorage.getItem('pageFormat');
-            if (savedFormat) {
-                document.getElementById('pageFormat').value = savedFormat;
-            } else {
-                // Default to carta
-                document.getElementById('pageFormat').value = 'carta';
-            }
-            updatePageFormat();
-
             // Load all other fields
             fieldsToSave.forEach(function(field) {
-                if (field.id === 'meetingType' || field.id === 'pageFormat') return;
+                if (field.id === 'meetingType') return;
 
                 const savedContent = localStorage.getItem(field.id);
                 if (savedContent) {
@@ -346,8 +306,7 @@
         });
 
         document.getElementById('pageFormat').addEventListener('change', function() {
-            updatePageFormat();
-            saveAllContent();
+            // Eliminado: ya no hay formato de página
         });
 
         fieldsToSave.forEach(function(field) {
