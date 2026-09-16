@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minuta de Reunión</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <style id="dynamicPageSize">@page { size: letter; margin: 0; }</style>
     <style>
         :root {
             --page-width: 210mm;
@@ -17,7 +21,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
             background-color: #f0f0f0;
             color: #333;
             margin: 0;
@@ -52,6 +56,7 @@
             border-radius: 5px;
             border: 1px solid #ccc;
             font-size: 1rem;
+            font-family: inherit;
         }
 
         .no-print button {
@@ -86,6 +91,7 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
         }
 
         h1 {
@@ -94,26 +100,72 @@
             border-bottom: 2px solid #005a9c;
             padding-bottom: 8px;
             margin-top: 45px;
-            margin-bottom: 18px;
-            font-size: 2.25rem;
+            margin-bottom: 8px;
+            font-size: 2.1rem;
+            font-weight: 700;
         }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px 20px;
-            margin-bottom: 10px;
+        .subtitle-block {
+            text-align: center;
+            margin-bottom: 14px;
         }
 
-        .info-grid-full {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px 15px;
-            margin-bottom: 10px;
+        .subtitle-line.editable {
+            display: inline-block;
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #005a9c;
+            max-width: 90%;
+            margin: 0 auto 4px auto;
+        }
+
+        .section-heading {
+            font-weight: 700;
+            color: #333;
+            margin: 10px 0 8px 0;
         }
 
         .field {
             margin-bottom: 8px;
+        }
+
+        .field-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .field-row strong {
+            flex-shrink: 0;
+            min-width: 150px;
+            font-size: 1rem;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .field-row .editable,
+        .field-row .editable-input {
+            flex: 1;
+            min-height: 16px;
+        }
+
+        .field-row-double {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 8px;
+        }
+
+        .field-row-double .field-row {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .field-row-double .field-row strong {
+            min-width: 90px;
         }
 
         .field strong {
@@ -131,6 +183,7 @@
             line-height: 1.3;
             background-color: rgba(255, 255, 255, 0.9);
             font-size: 0.9rem;
+            font-family: inherit;
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
@@ -152,66 +205,131 @@
         }
 
         .large-area {
-            min-height: 125px;
-            max-height: 145px;
+            min-height: 90px;
+            max-height: 120px;
             overflow-y: auto;
         }
 
+        .large-area ol, .large-area ul {
+            margin: 4px 0;
+            padding-left: 22px;
+        }
+
+        .field-toolbar {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .field-toolbar button {
+            width: 28px;
+            height: 26px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            font-size: 0.85rem;
+            line-height: 1;
+            font-family: inherit;
+        }
+
+        .field-toolbar button:hover {
+            background-color: #e9ecef;
+        }
+
+        .field-toolbar button.bold-btn { font-weight: 700; }
+        .field-toolbar button.italic-btn { font-style: italic; }
+        .field-toolbar button.underline-btn { text-decoration: underline; }
+
+        /* Plantillas por tipo de reunión */
+        .meeting-template, .subtitle-block {
+            display: none;
+        }
+
+        .meeting-template[data-meeting="consejo"] {
+            display: block;
+        }
+
         @media print {
-            body {
+            html, body {
                 background-color: transparent;
                 padding: 0;
+                margin: 0;
+                background-image: url('images/fondo.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
 
-            .no-print {
+            .no-print, .field-toolbar {
                 display: none;
             }
 
             .page {
                 width: 100%;
-                height: 100vh;
+                height: auto;
+                min-height: 100vh;
                 margin: 0;
                 padding: var(--main-padding);
                 box-shadow: none;
                 border: none;
-                background-image: url('images/fondo.png') !important;
-                background-size: cover !important;
-                background-position: center !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
+                background: none;
+                overflow: visible;
+            }
+
+            .content-wrapper {
+                height: auto;
+                overflow: visible;
             }
 
             .editable, .editable-input {
                 border: none;
-                padding: 2px 0;
+                padding: 1px 0;
                 background-color: transparent;
+                line-height: 1.2;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
 
-            @page {
-                size: letter;
-                margin: 0;
+            h1 {
+                margin-top: 15px;
+                margin-bottom: 4px;
+                padding-bottom: 4px;
+                font-size: 1.7rem;
             }
-        }
 
-        @media print {
-            :root[data-format="a4"] .page {
-                width: 210mm;
-                height: 297mm;
+            .subtitle-block {
+                margin-bottom: 8px;
             }
-        }
 
-        @page {
-            size: letter;
-            margin: 0;
+            .subtitle-line.editable {
+                margin-bottom: 1px;
+                font-size: 0.95rem;
+            }
+
+            .field-row, .field-row-double, .field {
+                margin-bottom: 3px;
+            }
+
+            .section-heading {
+                margin: 5px 0 3px 0;
+            }
+
+            .large-area {
+                min-height: auto;
+                max-height: none;
+                overflow: visible;
+            }
         }
 
         :root[data-format="a4"] {
             --page-width: 210mm;
             --page-height: 297mm;
         }
-        
+
     </style>
 </head>
 <body>
@@ -222,6 +340,7 @@
             <option value="Reunión de Sumo Consejo">Reunión de Sumo Consejo</option>
             <option value="Reunión de Consejo de Obispos">Reunión de Consejo de Obispos</option>
             <option value="Reunión de Consejo de Estaca">Reunión de Consejo de Estaca</option>
+            <option value="Reunión de Líderes">Reunión de Líderes</option>
         </select>
         <label for="pageFormat">Formato:</label>
         <select id="pageFormat">
@@ -235,55 +354,160 @@
         <div class="content-wrapper">
             <h1 id="meetingTitle">Reunión de Sumo Consejo</h1>
 
-            <div class="info-grid">
-                <div class="field">
-                    <strong>Fecha:</strong>
-                    <input type="date" id="fecha" class="editable-input">
+            <div class="subtitle-block" data-meeting="lideres">
+                <div class="subtitle-line editable" contenteditable="true" id="lideres_subtitulo"></div>
+            </div>
+
+            <!-- ===== Plantilla: Sumo Consejo / Obispos / Estaca ===== -->
+            <div class="meeting-template" data-meeting="consejo">
+
+                <div class="field-row-double">
+                    <div class="field-row">
+                        <strong>Fecha:</strong>
+                        <input type="date" id="fecha" class="editable-input">
+                    </div>
+                    <div class="field-row">
+                        <strong>Preside:</strong>
+                        <div class="editable" contenteditable="true" id="preside"></div>
+                    </div>
                 </div>
-                <div class="field">
+
+                <div class="field-row">
                     <strong>Dirige:</strong>
                     <div class="editable" contenteditable="true" id="dirige"></div>
                 </div>
+
+                <div class="field-row">
+                    <strong>Oración:</strong>
+                    <div class="editable" contenteditable="true" id="oracion"></div>
+                </div>
+
+                <div class="field-row">
+                    <strong>Pensamiento espiritual:</strong>
+                    <div class="editable" contenteditable="true" id="pensamiento"></div>
+                </div>
+
+                <div class="field">
+                    <strong>Anuncios:</strong>
+                    <div class="field-toolbar">
+                        <button type="button" class="bold-btn" title="Negrita" data-target="anuncios" data-cmd="bold">N</button>
+                        <button type="button" class="italic-btn" title="Cursiva" data-target="anuncios" data-cmd="italic">K</button>
+                        <button type="button" class="underline-btn" title="Subrayado" data-target="anuncios" data-cmd="underline">S</button>
+                        <button type="button" title="Lista numerada" data-target="anuncios" data-list="numbers">1.</button>
+                        <button type="button" title="Lista con letras" data-target="anuncios" data-list="letters">a.</button>
+                    </div>
+                    <div class="editable large-area" contenteditable="true" id="anuncios"></div>
+                </div>
+
+                <div class="field">
+                    <strong>Instrucción / Capacitación / Consejo:</strong>
+                    <div class="field-toolbar">
+                        <button type="button" class="bold-btn" title="Negrita" data-target="instruccion" data-cmd="bold">N</button>
+                        <button type="button" class="italic-btn" title="Cursiva" data-target="instruccion" data-cmd="italic">K</button>
+                        <button type="button" class="underline-btn" title="Subrayado" data-target="instruccion" data-cmd="underline">S</button>
+                        <button type="button" title="Lista numerada" data-target="instruccion" data-list="numbers">1.</button>
+                        <button type="button" title="Lista con letras" data-target="instruccion" data-list="letters">a.</button>
+                    </div>
+                    <div class="editable large-area" contenteditable="true" id="instruccion"></div>
+                </div>
+
+                <div class="field-row">
+                    <strong>Oración Final:</strong>
+                    <div class="editable" contenteditable="true" id="oracion_final"></div>
+                </div>
+
             </div>
 
-            <div class="field">
-                <strong>Preside:</strong>
-                <div class="editable" contenteditable="true" id="preside"></div>
+            <!-- ===== Plantilla: Reunión de Líderes ===== -->
+            <div class="meeting-template" data-meeting="lideres">
+
+                <div class="field-row">
+                    <strong>Preside:</strong>
+                    <div class="editable" contenteditable="true" id="lideres_preside"></div>
+                </div>
+                <div class="field-row">
+                    <strong>Reconocimientos:</strong>
+                    <div class="editable" contenteditable="true" id="lideres_reconocimientos"></div>
+                </div>
+
+                <div class="field-row">
+                    <strong>Dirige:</strong>
+                    <div class="editable" contenteditable="true" id="lideres_dirige"></div>
+                </div>
+                <div class="field-row">
+                    <strong>Director:</strong>
+                    <div class="editable" contenteditable="true" id="lideres_director"></div>
+                </div>
+                <div class="field-row">
+                    <strong>Pianista:</strong>
+                    <div class="editable" contenteditable="true" id="lideres_pianista"></div>
+                </div>
+
+                <div class="field-row">
+                    <strong>Himno Inicial:</strong>
+                    <div class="editable" contenteditable="true" id="lideres_himno_inicial"></div>
+                </div>
+                <div class="field-row">
+                    <strong>Oración inicial:</strong>
+                    <div class="editable" contenteditable="true" id="lideres_oracion_inicial"></div>
+                </div>
+
+                <div class="field">
+                    <div class="section-heading">Palabras de Bienvenida y División de Clases</div>
+                    <div class="field-toolbar">
+                        <button type="button" class="bold-btn" title="Negrita" data-target="lideres_division_clases" data-cmd="bold">N</button>
+                        <button type="button" class="italic-btn" title="Cursiva" data-target="lideres_division_clases" data-cmd="italic">K</button>
+                        <button type="button" class="underline-btn" title="Subrayado" data-target="lideres_division_clases" data-cmd="underline">S</button>
+                        <button type="button" title="Lista numerada" data-target="lideres_division_clases" data-list="numbers">1.</button>
+                        <button type="button" title="Lista con letras" data-target="lideres_division_clases" data-list="letters">a.</button>
+                    </div>
+                    <div class="editable large-area" contenteditable="true" id="lideres_division_clases"></div>
+                </div>
+
+                <div class="field">
+                    <strong>Anuncios:</strong>
+                    <div class="field-toolbar">
+                        <button type="button" class="bold-btn" title="Negrita" data-target="lideres_anuncios" data-cmd="bold">N</button>
+                        <button type="button" class="italic-btn" title="Cursiva" data-target="lideres_anuncios" data-cmd="italic">K</button>
+                        <button type="button" class="underline-btn" title="Subrayado" data-target="lideres_anuncios" data-cmd="underline">S</button>
+                        <button type="button" title="Lista numerada" data-target="lideres_anuncios" data-list="numbers">1.</button>
+                        <button type="button" title="Lista con letras" data-target="lideres_anuncios" data-list="letters">a.</button>
+                    </div>
+                    <div class="editable large-area" contenteditable="true" id="lideres_anuncios"></div>
+                </div>
+
             </div>
 
-            <div class="field">
-                <strong>Oración:</strong>
-                <div class="editable" contenteditable="true" id="oracion"></div>
-            </div>
-
-            <div class="field">
-                <strong>Pensamiento espiritual:</strong>
-                <div class="editable" contenteditable="true" id="pensamiento"></div>
-            </div>
-
-            <div class="field">
-                <strong>Anuncios:</strong>
-                <div class="editable large-area" contenteditable="true" id="anuncios"></div>
-            </div>
-
-            <div class="field">
-                <strong>Instrucción / Capacitación / Consejo:</strong>
-                <div class="editable large-area" contenteditable="true" id="instruccion"></div>
-            </div>
-
-            <div class="field">
-                <strong>Oración Final:</strong>
-                <div class="editable" contenteditable="true" id="oracion_final"></div>
-            </div>
         </div>
     </div>
 
     <script>
-        // --- Functions to update UI ---
+        const meetingTemplateMap = {
+            "Reunión de Sumo Consejo": "consejo",
+            "Reunión de Consejo de Obispos": "consejo",
+            "Reunión de Consejo de Estaca": "consejo",
+            "Reunión de Líderes": "lideres"
+        };
+
+        // --- UI principal ---
         function updateTitle() {
             const select = document.getElementById('meetingType');
             const title = document.getElementById('meetingTitle');
             title.textContent = select.value;
+            updateTemplate();
+        }
+
+        function updateTemplate() {
+            const meetingType = document.getElementById('meetingType').value;
+            const templateKey = meetingTemplateMap[meetingType] || 'consejo';
+
+            document.querySelectorAll('.meeting-template').forEach(function(el) {
+                el.style.display = (el.getAttribute('data-meeting') === templateKey) ? 'block' : 'none';
+            });
+
+            document.querySelectorAll('.subtitle-block').forEach(function(el) {
+                el.style.display = (el.getAttribute('data-meeting') === templateKey) ? 'block' : 'none';
+            });
         }
 
         function updatePageFormat() {
@@ -293,9 +517,15 @@
             } else {
                 document.documentElement.setAttribute('data-format', 'a4');
             }
+
+            const pageSizeStyle = document.getElementById('dynamicPageSize');
+            if (pageSizeStyle) {
+                const physicalSize = (format === 'carta') ? 'letter' : 'A4';
+                pageSizeStyle.textContent = '@page { size: ' + physicalSize + '; margin: 0; }';
+            }
         }
 
-        // --- Functions for saving and loading data ---
+        // --- Campos: guardado/carga ---
         const fieldsToSave = document.querySelectorAll('.editable, .editable-input, #meetingType, #pageFormat');
 
         function saveAllContent() {
@@ -307,24 +537,20 @@
         }
 
         function loadAllContent() {
-            // Load meeting type first to set title correctly
             const savedType = localStorage.getItem('meetingType');
-            if (savedType) {
+            if (savedType && meetingTemplateMap[savedType]) {
                 document.getElementById('meetingType').value = savedType;
             }
             updateTitle();
 
-            // Load page format
             const savedFormat = localStorage.getItem('pageFormat');
             if (savedFormat) {
                 document.getElementById('pageFormat').value = savedFormat;
             } else {
-                // Default to carta
                 document.getElementById('pageFormat').value = 'carta';
             }
             updatePageFormat();
 
-            // Load all other fields
             fieldsToSave.forEach(function(field) {
                 if (field.id === 'meetingType' || field.id === 'pageFormat') return;
 
@@ -339,7 +565,6 @@
             });
         }
 
-        // --- Event Listeners ---
         document.getElementById('meetingType').addEventListener('change', function() {
             updateTitle();
             saveAllContent();
@@ -354,6 +579,33 @@
             if (field.id !== 'meetingType' && field.id !== 'pageFormat') {
                 field.addEventListener('input', saveAllContent);
             }
+        });
+
+        // --- Barra de formato (negrita, cursiva, subrayado, listas) ---
+        document.querySelectorAll('.field-toolbar button').forEach(function(btn) {
+            btn.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+            });
+
+            btn.addEventListener('click', function() {
+                const targetId = btn.getAttribute('data-target');
+                const target = document.getElementById(targetId);
+                target.focus();
+
+                const cmd = btn.getAttribute('data-cmd');
+                const listType = btn.getAttribute('data-list');
+
+                if (cmd) {
+                    document.execCommand(cmd, false, null);
+                } else if (listType) {
+                    document.execCommand('insertOrderedList', false, null);
+                    target.querySelectorAll('ol').forEach(function(ol) {
+                        ol.style.listStyleType = (listType === 'letters') ? 'lower-alpha' : 'decimal';
+                    });
+                }
+
+                saveAllContent();
+            });
         });
 
         window.onload = loadAllContent;
