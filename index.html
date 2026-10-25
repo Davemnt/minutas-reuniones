@@ -442,18 +442,22 @@
 
         @media screen and (max-width: 600px) {
             :root {
-                --main-padding: 56px 18px;
+                /* El alto del membrete escala con el ancho de la hoja (imagen 1414x2000) */
+                --sheet-width: calc(100vw - 16px);
+                --main-padding: calc(var(--sheet-width) * 0.19 + 4px) 18px 32px;
             }
 
             body {
-                padding: 174px 8px 16px;
+                padding: 8px 8px 16px;
             }
 
+            /* El panel deja de estar fijo: en pantallas chicas tapaba la hoja */
             .no-print {
+                position: static;
                 display: grid;
-                grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
-                right: 8px;
-                left: 8px;
+                grid-template-columns: auto minmax(0, 1fr);
+                gap: 8px 10px;
+                margin-bottom: 10px;
                 align-items: center;
             }
 
@@ -467,18 +471,50 @@
                 grid-column: 1 / -1;
             }
 
+            /* Membrete arriba y ondas abajo, sin recortar ni deformar el fondo */
             .page {
-                min-height: calc((100vw - 16px) * 1.29);
+                min-height: calc(var(--sheet-width) * 1.29);
+                background-image: none;
+            }
+
+            .page::before,
+            .page::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                z-index: 0;
+                pointer-events: none;
+                background-image: url('images/fondo.png');
+                background-size: 100% auto;
+                background-repeat: no-repeat;
+            }
+
+            .page::before {
+                top: 0;
+                height: calc(var(--sheet-width) * 0.19);
+                background-position: top center;
+            }
+
+            .page::after {
+                bottom: 0;
+                height: calc(var(--sheet-width) * 0.5);
+                background-position: bottom center;
             }
 
             h1 {
                 margin-top: 8px;
-                line-height: 1.15;
+                margin-bottom: 20px;
+                line-height: 1.2;
+            }
+
+            h1::after {
+                margin-top: 14px;
             }
 
             .subtitle-line.editable {
                 max-width: 100%;
-                font-size: 0.95rem;
+                font-size: 1rem;
             }
 
             .field-row,
@@ -486,24 +522,47 @@
                 display: block;
             }
 
-            .field-row-double .field-row:first-child {
-                margin-bottom: 8px;
+            .field-row {
+                margin-bottom: 16px;
+            }
+
+            .field-row-double {
+                margin-bottom: 0;
+            }
+
+            .field-row-double .field-row {
+                margin-bottom: 16px;
             }
 
             .field-row strong,
             .field-row-double .field-row strong,
-            .field strong {
+            .field strong,
+            .field > .section-heading {
                 display: block;
                 min-width: 0;
-                margin-bottom: 4px;
-                font-size: 0.95rem;
+                margin-bottom: 2px;
+                padding-bottom: 0;
+                font-size: 0.9rem;
+                color: #4a5a61;
+            }
+
+            /* 16px evita que el celular haga zoom al tocar un campo */
+            .editable,
+            .editable-input {
+                font-size: 16px;
             }
 
             .field-row .editable,
             .field-row .editable-input {
                 display: block;
                 width: 100%;
+                min-height: 24px;
                 box-sizing: border-box;
+            }
+
+            .field {
+                display: block;
+                margin: 20px 0 16px;
             }
 
             .large-area {
@@ -512,12 +571,15 @@
             }
 
             .field-toolbar {
-                flex-wrap: wrap;
+                gap: 6px;
+                margin: 4px 0 6px;
             }
 
             .field-toolbar button {
-                width: 36px;
+                width: 40px;
                 height: 34px;
+                background-color: rgba(26, 156, 196, 0.08);
+                color: #0b6e8f;
             }
         }
 
