@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minuta de Reunión</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
     <style id="dynamicPageSize">@page { size: letter; margin: 0; }</style>
     <style>
         :root {
@@ -21,7 +18,7 @@
         }
 
         body {
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            font-family: "Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
             background-color: #f0f0f0;
             color: #333;
             margin: 0;
@@ -168,8 +165,8 @@
             flex-shrink: 0;
             min-width: 190px;
             font-size: 0.95rem;
-            color: #2d3a40;
-            font-weight: 500;
+            color: #0b6e8f;
+            font-weight: 700;
             padding-bottom: 4px;
         }
 
@@ -295,15 +292,15 @@
         }
 
         @media print {
+            :root {
+                /* Márgenes alineados con el membrete del fondo */
+                --main-padding: 36mm 22mm 24mm 27mm;
+            }
+
             html, body {
-                background-color: transparent;
+                background: none;
                 padding: 0;
                 margin: 0;
-                background-image: url('images/fondo.png');
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-attachment: fixed;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
@@ -312,15 +309,19 @@
                 display: none;
             }
 
+            /* La hoja ocupa exactamente la página y lleva el fondo completo (membrete + ondas) */
             .page {
-                width: 100%;
+                width: var(--page-width);
                 height: auto;
-                min-height: 100vh;
+                min-height: var(--page-height);
                 margin: 0;
                 padding: var(--main-padding);
                 box-shadow: none;
                 border: none;
-                background: none;
+                background-image: url('images/fondo.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
                 overflow: visible;
             }
 
@@ -331,50 +332,79 @@
 
             .editable, .editable-input {
                 border: none;
-                padding: 1px 0;
+                padding: 0;
                 background-color: transparent;
-                line-height: 1.2;
+                line-height: 1.45;
+                font-size: 11pt;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
 
+            .editable-input::-webkit-calendar-picker-indicator {
+                display: none;
+            }
+
             h1 {
-                margin-top: 15px;
-                margin-bottom: 10px;
-                padding-bottom: 4px;
-                font-size: 1.7rem;
+                margin-top: 0;
+                margin-bottom: 9mm;
+                font-size: 20pt;
             }
 
             h1::after {
-                margin-top: 10px;
-            }
-
-            .field {
-                display: block;
-                margin: 6px 0 3px;
+                margin-top: 5mm;
             }
 
             .subtitle-block {
-                margin-bottom: 8px;
+                margin: -5mm 0 8mm;
             }
 
             .subtitle-line.editable {
-                margin-bottom: 1px;
-                font-size: 0.95rem;
+                font-size: 11.5pt;
             }
 
-            .field-row, .field-row-double, .field {
-                margin-bottom: 3px;
+            .field-row {
+                align-items: baseline;
+                margin-bottom: 3.2mm;
             }
 
-            .section-heading {
-                margin: 5px 0 3px 0;
+            .field-row strong {
+                padding-bottom: 0;
+                font-size: 10.5pt;
+            }
+
+            .field-row-double {
+                margin-bottom: 3.2mm;
+            }
+
+            /* Bloques largos (Anuncios, Instrucción): título de sección con aire arriba */
+            .field {
+                display: block;
+                margin: 7mm 0 5mm;
+            }
+
+            .field > strong,
+            .field > .section-heading {
+                margin-bottom: 2.5mm;
+                padding-bottom: 1.5mm;
+                border-bottom: 1px solid #d3e6ec;
+                font-size: 10.5pt;
+                color: #0b6e8f;
+                text-transform: uppercase;
+                letter-spacing: 0.6px;
             }
 
             .large-area {
                 min-height: auto;
                 max-height: none;
                 overflow: visible;
+                border: none;
+                border-radius: 0;
+                padding: 0;
+                box-shadow: none;
+            }
+
+            .large-area ol, .large-area ul {
+                margin: 1mm 0;
             }
         }
 
@@ -543,7 +573,7 @@
                 margin-bottom: 2px;
                 padding-bottom: 0;
                 font-size: 0.9rem;
-                color: #4a5a61;
+                color: #0b6e8f;
             }
 
             /* 16px evita que el celular haga zoom al tocar un campo */
